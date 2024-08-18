@@ -1,26 +1,42 @@
+# Compiler and flags
 CC = gcc
-CFLAGS = -Wall -Wextra -std=c99
-LDFLAGS = -lm
+CFLAGS = -Wall -Wextra -g -I include/
 
-TARGET = mega_sena_manager
-OBJS = main.o hash_table.o file_handler.o statistics.o
+# Directories
+SRCDIR = src
+OBJDIR = obj
+BINDIR = bin
 
+# Output executable name
+TARGET = $(BINDIR)/mega_sena_manager
+
+# Source files
+SOURCES = $(wildcard $(SRCDIR)/*.c)
+
+# Object files
+OBJECTS = $(patsubst $(SRCDIR)/%.c,$(OBJDIR)/%.o,$(SOURCES))
+
+# Default target
 all: $(TARGET)
 
-$(TARGET): $(OBJS)
-	$(CC) $(CFLAGS) -o $@ $(OBJS) $(LDFLAGS)
+# Build the final executable
+$(TARGET): $(OBJECTS) | $(BINDIR)
+	$(CC) $(CFLAGS) -o $(TARGET) $(OBJECTS)
 
-main.o: main.c hash_table.h statistics.h file_handler.h
-	$(CC) $(CFLAGS) -c main.c
+# Rule to build object files
+$(OBJDIR)/%.o: $(SRCDIR)/%.c | $(OBJDIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-hash_table.o: hash_table.c hash_table.h
-	$(CC) $(CFLAGS) -c hash_table.c
+# Create necessary directories
+$(OBJDIR):
+	mkdir -p $(OBJDIR)
 
-file_handler.o: file_handler.c file_handler.h hash_table.h
-	$(CC) $(CFLAGS) -c file_handler.c
+$(BINDIR):
+	mkdir -p $(BINDIR)
 
-statistics.o: statistics.c statistics.h hash_table.h
-	$(CC) $(CFLAGS) -c statistics.c
-
+# Clean up build files
 clean:
-	rm -f $(TARGET) $(OBJS)
+	rm -rf $(OBJDIR) $(BINDIR)
+
+# PHONY targets to prevent conflicts with files of the same name
+.PHONY: all clean
