@@ -1,5 +1,10 @@
 # Gerenciador de Concursos da Mega-Sena
 
+## Autores:
+
+- Gabriel Fontineli Dantas
+- Matheus Freitas
+
 Este projeto é um sistema para gerenciar concursos da Mega-Sena, utilizando uma tabela de dispersão (hash table) para armazenar e acessar os resultados dos concursos. O sistema é capaz de realizar operações básicas como inserção, busca, remoção de concursos e também calcular e apresentar estatísticas relevantes sobre os números sorteados.
 
 ## Funcionalidades
