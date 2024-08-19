@@ -20,9 +20,9 @@ int main() {
 
     while (1) {
         display_menu();
-        printf("Enter your choice: ");
+        printf("Digite sua escolha: ");
         if (scanf("%d", &choice) != 1) {
-            printf("Invalid input. Please enter a number.\n");
+            printf("Entrada inválida. Por favor, insira um número.\n");
             while (getchar() != '\n'); // Clear invalid input
             continue;
         }
@@ -47,11 +47,11 @@ int main() {
                 handle_display_statistics(hash_table);
                 break;
             case 0:
-                printf("Exiting...\n");
+                printf("Saindo...\n");
                 free_hash_table(hash_table);
                 exit(0);
             default:
-                printf("Invalid choice. Please select a valid option.\n");
+                printf("Escolha inválida. Por favor, selecione uma opção válida.\n");
                 break;
         }
     }
@@ -60,106 +60,105 @@ int main() {
 }
 
 void display_menu() {
-    printf("\nMega-Sena Manager\n");
-    printf("1. Insert Concurso\n");
-    printf("2. Search Concurso\n");
-    printf("3. Remove Concurso\n");
-    printf("4. Display All Concursos\n");
-    printf("5. Load Concursos from File\n");
-    printf("6. Display Statistics\n");
-    printf("0. Exit\n");
+    printf("\nGerenciador da Mega-Sena\n");
+    printf("1. Inserir Concurso\n");
+    printf("2. Buscar Concurso\n");
+    printf("3. Remover Concurso\n");
+    printf("4. Exibir Todos os Concursos\n");
+    printf("5. Carregar Concursos de um Arquivo\n");
+    printf("6. Exibir Estatísticas\n");
+    printf("0. Sair\n");
 }
 
 void handle_insert_concurso(HashTable* hash_table) {
     int concurso, numbers[6];
     char date[11];
 
-    printf("Enter concurso number: ");
+    printf("Digite o número do concurso: ");
     scanf("%d", &concurso);
-    printf("Enter date (DD-MM-YYYY): ");
+    printf("Digite a data (DD-MM-AAAA): ");
     scanf("%s", date);
-    printf("Enter 6 numbers (space-separated): ");
+    printf("Digite os 6 números (separados por espaço): ");
     for (int i = 0; i < 6; i++) {
         scanf("%d", &numbers[i]);
     }
 
     insert_concurso(hash_table, concurso, date, numbers);
-    printf("Concurso %d inserted successfully.\n", concurso);
 }
 
 void handle_search_concurso(HashTable* hash_table) {
     int concurso;
-    printf("Enter concurso number to search: ");
+    printf("Digite o número do concurso para buscar: ");
     scanf("%d", &concurso);
 
     Node* result = search_concurso(hash_table, concurso);
     if (result) {
-        printf("Concurso: %d, Date: %s, Numbers: ", result->concurso, result->date);
+        printf("Concurso: %d, Data: %s, Números: ", result->concurso, result->date);
         for (int i = 0; i < 6; i++) {
             printf("%d ", result->numbers[i]);
         }
         printf("\n");
     } else {
-        printf("Concurso %d not found.\n", concurso);
+        printf("Concurso %d não encontrado.\n", concurso);
     }
 }
 
 void handle_remove_concurso(HashTable* hash_table) {
     int concurso;
-    printf("Enter concurso number to remove: ");
+    printf("Digite o número do concurso para remover: ");
     scanf("%d", &concurso);
 
     remove_concurso(hash_table, concurso);
 }
 
 void handle_display_all_concursos(HashTable* hash_table) {
-    printf("Displaying all concursos:\n");
+    printf("Exibindo todos os concursos:\n");
     display_concursos(hash_table);
 }
 
 void handle_load_from_file(HashTable* hash_table) {
     char filename[256];
-    printf("Enter filename to load concursos from: ");
+    printf("Digite o nome do arquivo para carregar os concursos: ");
     scanf("%s", filename);
 
     load_concursos_from_file(hash_table, filename);
-    printf("Concursos loaded from %s.\n", filename);
+    printf("Concursos carregados de %s.\n", filename);
 }
 
 void handle_display_statistics(HashTable* hash_table) {
     int choice, n, year, number;
 
-    printf("Statistics Menu:\n");
-    printf("1. Count frequency of a specific number\n");
-    printf("2. Display top N most frequent numbers\n");
-    printf("3. Display top N least frequent numbers\n");
-    printf("4. Count concursos in a specific year\n");
-    printf("Enter your choice: ");
+    printf("Menu de Estatísticas:\n");
+    printf("1. Contar frequência de um número específico\n");
+    printf("2. Exibir os N números mais frequentes\n");
+    printf("3. Exibir os N números menos frequentes\n");
+    printf("4. Contar concursos em um ano específico\n");
+    printf("Digite sua escolha: ");
     scanf("%d", &choice);
 
     switch (choice) {
         case 1:
-            printf("Enter the number to count frequency: ");
+            printf("Digite o número para contar a frequência: ");
             scanf("%d", &number);
-            printf("Number %d was drawn %d times.\n", number, count_number_frequency(hash_table, number));
+            printf("O número %d foi sorteado %d vezes.\n", number, count_number_frequency(hash_table, number));
             break;
         case 2:
-            printf("Enter N for top N most frequent numbers: ");
+            printf("Digite N para os N números mais frequentes: ");
             scanf("%d", &n);
             display_top_n_numbers(hash_table, n, 1);
             break;
         case 3:
-            printf("Enter N for top N least frequent numbers: ");
+            printf("Digite N para os N números menos frequentes: ");
             scanf("%d", &n);
             display_top_n_numbers(hash_table, n, 0);
             break;
         case 4:
-            printf("Enter the year to count concursos: ");
+            printf("Digite o ano para contar os concursos: ");
             scanf("%d", &year);
-            printf("There were %d concursos in %d.\n", count_concursos_in_year(hash_table, year), year);
+            printf("Houve %d concursos em %d.\n", count_concursos_in_year(hash_table, year), year);
             break;
         default:
-            printf("Invalid choice.\n");
+            printf("Escolha inválida.\n");
             break;
     }
 }

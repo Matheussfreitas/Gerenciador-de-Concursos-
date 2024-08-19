@@ -34,22 +34,40 @@ HashTable* create_hash_table() {
 }
 
 // Function to insert a new concurso into the hash table
+// Function to insert a new concurso into the hash table
 void insert_concurso(HashTable* hash_table, int concurso, const char* date, int numbers[6]) {
     unsigned int index = hash_function(concurso);
+
+    // Verifica se o concurso já existe na tabela
+    Node* current = hash_table->table[index];
+    while (current != NULL) {
+        if (current->concurso == concurso) {
+            printf("Concurso %d já existe e não pode ser duplicado.\n", concurso);
+            return; // Não insere um concurso duplicado e retorna imediatamente
+        }
+        current = current->next;
+    }
+
+    // Se não existir, cria um novo nó e insere na lista
     Node* new_node = create_node(concurso, date, numbers);
+    if (new_node == NULL) {
+        printf("Falha na alocação de memória para o novo concurso.\n");
+        return;
+    }
 
     if (hash_table->table[index] == NULL) {
         hash_table->table[index] = new_node;
     } else {
-        // Collision handling using chaining (linked list)
-        Node* current = hash_table->table[index];
+        // Colisão tratada com encadeamento (lista ligada)
+        current = hash_table->table[index]; // Reinicia o ponteiro 'current' para a cabeça da lista
         while (current->next != NULL) {
             current = current->next;
         }
         current->next = new_node;
     }
-}
 
+    printf("Concurso %d inserido com sucesso.\n", concurso);
+}
 // Function to search for a concurso in the hash table
 Node* search_concurso(HashTable* hash_table, int concurso) {
     unsigned int index = hash_function(concurso);
