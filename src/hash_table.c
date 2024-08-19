@@ -48,7 +48,24 @@ void insert_concurso(HashTable* hash_table, int concurso, const char* date, int 
         current = current->next;
     }
 
-    // Se não existir, cria um novo nó e insere na lista
+    // Verifica se os números estão dentro da faixa permitida (1-60) e se não há repetição
+    int number_check[61] = {0}; // Array para marcar os números de 1 a 60
+
+    for (int i = 0; i < 6; i++) {
+        if (numbers[i] < 1 || numbers[i] > 60) {
+            printf("Número inválido %d no concurso %d. Os números devem estar entre 1 e 60.\n", numbers[i], concurso);
+            return; // Retorna sem inserir caso haja um número fora da faixa
+        }
+
+        if (number_check[numbers[i]] == 1) {
+            printf("Número repetido %d no concurso %d. Não pode haver números repetidos em um concurso.\n", numbers[i], concurso);
+            return; // Retorna sem inserir caso haja números repetidos
+        }
+
+        number_check[numbers[i]] = 1; // Marca o número como já utilizado
+    }
+
+    // Se todos os números forem válidos, cria um novo nó e insere na tabela de dispersão
     Node* new_node = create_node(concurso, date, numbers);
     if (new_node == NULL) {
         printf("Falha na alocação de memória para o novo concurso.\n");
@@ -59,7 +76,7 @@ void insert_concurso(HashTable* hash_table, int concurso, const char* date, int 
         hash_table->table[index] = new_node;
     } else {
         // Colisão tratada com encadeamento (lista ligada)
-        current = hash_table->table[index]; // Reinicia o ponteiro 'current' para a cabeça da lista
+        current = hash_table->table[index];
         while (current->next != NULL) {
             current = current->next;
         }
